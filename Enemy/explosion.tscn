@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://mlf71mgq7lhe"]
+
+[ext_resource type="Texture2D" uid="uid://bi1ylq70a3cvk" path="res://Textures/Enemy/explosion_pixelfied.png" id="1_17wxl"]
+[ext_resource type="Script" path="res://Enemy/explosion.gd" id="2_ew8fv"]
+[ext_resource type="AudioStream" uid="uid://ht0ne3vcklv6" path="res://Audio/SoundEffect/enemy_death.ogg" id="2_f5cb0"]
+
+[sub_resource type="Animation" id="Animation_jcypl"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_pxrql"]
+resource_name = "explode"
+length = 0.32
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 0, 1, 12]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_uajcd"]
+_data = {
+"RESET": SubResource("Animation_jcypl"),
+"explode": SubResource("Animation_pxrql")
+}
+
+[node name="Explosion" type="Sprite2D"]
+z_index = 1
+texture = ExtResource("1_17wxl")
+hframes = 4
+vframes = 4
+script = ExtResource("2_ew8fv")
+
+[node name="snd_explosion" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_f5cb0")
+pitch_scale = 0.5
+autoplay = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_uajcd")
+}
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
